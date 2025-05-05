@@ -7,53 +7,50 @@ import 'dotenv/config';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuración básica
-app.use(cors());
+// Configuración CORS optimizada
 const corsOptions = {
   origin: [
-    'https://frontendwebsem8-zea.onrender.com', // URL de tu frontend en Render
-    'http://localhost:3000' // Para desarrollo local
+    'https://frontendwebsem8-zea.onrender.com', // Tu frontend en Render
+    'http://localhost:3000'                    // Desarrollo local
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 };
 
+// Aplica CORS con las opciones configuradas
 app.use(cors(corsOptions));
 
-// Ruta de verificación
+// Middlewares esenciales
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Ruta de verificación de salud
 app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    message: 'Backend funcionando correctamente',
-    environment: process.env.NODE_ENV || 'development',
-    timestamp: new Date()
+  res.json({ 
+    status: 'OK', 
+    message: 'Backend funcionando',
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
-app.use(express.json());
-
-// Rutas
+// Rutas de autenticación
 app.use('/api/auth', authRoutes);
 
-// Inicialización simple
+// Inicialización simplificada
 const startServer = async () => {
   try {
-    // 1. Conectar a la base de datos
     await db.sequelize.authenticate();
-    console.log('✅ Conectado a PostgreSQL en Render');
+    console.log('✅ Conectado a PostgreSQL');
     
-    // 2. Crear tablas automáticamente (solo en desarrollo)
-    if (process.env.NODE_ENV !== 'production') {
-      await db.sequelize.sync({ alter: true });
-    } else {
-      await db.sequelize.sync(); // En producción solo crea si no existen
-    }
-    console.log('✅ Tablas sincronizadas');
+    // Sincronización simple (sin alterar estructura en producción)
+    await db.sequelize.sync({ force: false });
+    console.log('✅ Modelos sincronizados');
     
-    // 3. Iniciar servidor
     app.listen(PORT, () => {
-      console.log(`🚀 Servidor listo en el puerto ${PORT}`);
+      console.log(`🚀 Servidor listo en http://localhost:${PORT}`);
+      console.log('🔧 Configuración CORS:');
+      console.log(corsOptions);
     });
   } catch (error) {
     console.error('❌ Error al iniciar:', error);
