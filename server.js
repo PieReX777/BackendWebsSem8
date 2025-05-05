@@ -9,6 +9,28 @@ const PORT = process.env.PORT || 3000;
 
 // Configuración básica
 app.use(cors());
+const corsOptions = {
+  origin: [
+    'https://frontendwebsem8-zea.onrender.com', // URL de tu frontend en Render
+    'http://localhost:3000' // Para desarrollo local
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+
+// Ruta de verificación
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'OK',
+    message: 'Backend funcionando correctamente',
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date()
+  });
+});
+
 app.use(express.json());
 
 // Rutas
