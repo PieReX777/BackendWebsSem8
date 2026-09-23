@@ -1,0 +1,18 @@
+name: FractalUp M2 Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: FractalUp M2 smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Confirm read-only check projection
+        run: echo "FractalUp GitHub M2 check completed successfully."

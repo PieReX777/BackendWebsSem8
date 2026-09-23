@@ -6,7 +6,7 @@ import 'dotenv/config';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+//Comentario en server.js para que FU lo lea
 // Configuración CORS optimizada
 const corsOptions = {
   origin: [
